@@ -1,10 +1,10 @@
 Device-Tree Bindings for a PPS generated signal on GPIO
 
-These properties describe a PPS (pulse-per-second) signal output 
+These properties describe a PPS (pulse-per-second) signal output
 through a GPIO pin.
 
 Required properties:
-- pps-gen-gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+- pps-gen-gpio: one PPS GPIO in the format described by ../gpio/gpio.txt
 
 Optional properties:
 - assert-falling-edge: when present, assert is indicated by a falling edge
@@ -13,7 +13,7 @@ Optional properties:
 Example:
 	pps-gen {
 		compatible = "pps-generator-gpios";
-		pps-gen-gpios = <&gpio2 6 0>;
+		pps-gen-gpio = <&gpio2 6 0>;
 
 		assert-falling-edge;
 	};

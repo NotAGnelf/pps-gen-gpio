@@ -1,0 +1,56 @@
+/*
+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
+ *               2018 Juan Solano <jsm@jsolano.com>
+ *               2021 Damon Kwok <damon-kwok@outlook.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/dts-v1/;
+/plugin/;
+
+// #include "am33xx.dtsi"
+// #include "am335x-bone-common.dtsi"
+// #include "am335x-boneblack-common.dtsi"
+
+#include <dt-bindings/board/am335x-bbw-bbb-base.h>
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/pinctrl/am33xx.h>
+
+
+/*
+ * Helper to show loaded overlays under: /proc/device-tree/chosen/overlays/
+ */
+&{/chosen} {
+	overlays {
+		BB-BONE-P9_16-PPS-GEN.kernel = __TIMESTAMP__;
+	};
+};
+
+/*
+ * Free up the pins used by the cape from the pinmux helpers.
+ */
+&ocp {
+	P9_16_pinmux { status = "disabled"; };	/* EHRPWM1B */
+};
+
+&am33xx_pinmux {
+	pps_gen_pins: pinmux_pps_gen_pins {
+		pinctrl-single,pins = <
+			BONE_P9_16 (PIN_OUTPUT_PULLDOWN | MUX_MODE7)  /* gpmc_a3.gpio1_19 */
+		>;
+	};
+};
+
+&{/} {
+	pps-gen {
+		status = "okay";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pps_gen_pins>;
+		compatible = "pps-gen-gpio";
+		pps-gen-gpio = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+		default-state = "off";
+	};
+};

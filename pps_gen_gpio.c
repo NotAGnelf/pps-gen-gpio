@@ -85,7 +85,7 @@ static enum hrtimer_restart hrtimer_callback(struct hrtimer *timer)
 	if (ts_expire_req.tv_sec != ts_expire_real.tv_sec
 	    || ts_expire_real.tv_nsec > time_gpio_assert_ns) {
 		local_irq_restore(irq_flags);
-		pr_err("We are late this time [%ld.%09lld]\n",
+		pr_err("pps_gen_gpio: We are late this time [%ld.%09lld]\n",
 		       ts_expire_real.tv_sec, ts_expire_real.tv_nsec);
 		goto done;
 	}
@@ -164,7 +164,7 @@ static void pps_gen_calibrate(struct pps_gen_gpio_devdata *devdata)
 	}
 
 	devdata->gpio_instr_time = time_acc / PPS_GEN_CALIBRATE_LOOPS;
-	pr_info("PPS GPIO set takes %ldns\n", devdata->gpio_instr_time);
+	pr_info("pps_gen_gpio: PPS GPIO set takes %ldns\n", devdata->gpio_instr_time);
 }
 
 static ktime_t pps_gen_first_timer_event(struct pps_gen_gpio_devdata *devdata)
@@ -203,6 +203,9 @@ static int pps_gen_gpio_probe(struct platform_device *pdev)
 	}
 
 	devdata->pps_gpio = devm_gpiod_get(dev, "pps-gen", GPIOD_OUT_LOW);
+	if(PTR_ERR(devdata->pps_gpio) == EPROBE_DEFER){ //
+		pr_info("pps_gen_gpio: Driver requests probe retry");
+	}
 	if (IS_ERR(devdata->pps_gpio)) {
 		ret = PTR_ERR(devdata->pps_gpio);
 		dev_err(dev, "Cannot get PPS GPIO [%d]\n", ret);
@@ -223,6 +226,7 @@ static int pps_gen_gpio_probe(struct platform_device *pdev)
 	hrtimer_start(&devdata->timer,
 		      pps_gen_first_timer_event(devdata),
 		      HRTIMER_MODE_ABS);
+	pr_info("pps_gen_gpio: PPS generator active");
 	return 0;
 
 err_gpio_dir:
@@ -263,6 +267,7 @@ static struct platform_driver pps_gen_gpio_driver = {
 
 static int __init pps_gen_gpio_init(void)
 {
+	pr_info("pps_gen_gpio: module init");
 	pr_info(DRVDESC "\n");
 	if (gpio_pulse_width_ns > GPIO_PULSE_WIDTH_MAX_NS) {
 		pr_err("pps_gen_gpio: width value should be not greater than %ldns\n",
@@ -275,6 +280,7 @@ static int __init pps_gen_gpio_init(void)
 
 static void __exit pps_gen_gpio_exit(void)
 {
+	pr_info("pps_gen_gpio: module exit");
 	pr_info("pps_gen_gpio: hrtimer average latency is %ldns\n",
 		hrtimer_avg_latency);
 	platform_driver_unregister(&pps_gen_gpio_driver);
