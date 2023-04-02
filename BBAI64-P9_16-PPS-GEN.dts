@@ -16,7 +16,7 @@
  */
 &{/chosen} {
   overlays {
-  BBAI64-PPS-GEN =  __TIMESTAMP__;
+    BBAI64-PPS-GEN =  __TIMESTAMP__;
   };
 };
 
@@ -24,7 +24,7 @@
 &main_pmx0 {
   pps_gen_pins: pinmux_pps_gen_pins {
     pinctrl-single,pins = <
-    P9_16(PIN_OUTPUT_PULLDOWN, 7)  /* J721E_IOPAD(0x17C, PIN_OUTPUT_PULLDOWN, 7) */
+      P9_16(PIN_OUTPUT_PULLDOWN, 7)  /* J721E_IOPAD(0x17C, PIN_OUTPUT_PULLDOWN, 7) */
     >;
   };
 };

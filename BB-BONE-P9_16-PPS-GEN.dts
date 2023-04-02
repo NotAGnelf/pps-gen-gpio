@@ -20,33 +20,33 @@
  * Helper to show loaded overlays under: /proc/device-tree/chosen/overlays/
  */
 &{/chosen} {
-	overlays {
-		BB-BONE-P9_16-PPS-GEN.kernel = __TIMESTAMP__;
-	};
+  overlays {
+    BB-BONE-P9_16-PPS-GEN.kernel = __TIMESTAMP__;
+  };
 };
 
 /*
  * Free up the pins used by the cape from the pinmux helpers.
  */
 &ocp {
-	P9_16_pinmux { status = "disabled"; };	/* EHRPWM1B */
+  P9_16_pinmux { status = "disabled"; };  /* EHRPWM1B */
 };
 
 &am33xx_pinmux {
-	pps_gen_pins: pinmux_pps_gen_pins {
-		pinctrl-single,pins = <
-			BONE_P9_16 (PIN_OUTPUT_PULLDOWN | MUX_MODE7)  /* gpmc_a3.gpio1_19 */
-		>;
-	};
+  pps_gen_pins: pinmux_pps_gen_pins {
+    pinctrl-single,pins = <
+      BONE_P9_16 (PIN_OUTPUT_PULLDOWN | MUX_MODE7)  /* gpmc_a3.gpio1_19 */
+    >;
+  };
 };
 
 &{/} {
-	pps-gen {
-		status = "okay";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pps_gen_pins>;
-		compatible = "pps-gen-gpio";
-		pps-gen-gpio = <&gpio1 19 GPIO_ACTIVE_HIGH>;
-		default-state = "off";
-	};
+  pps-gen {
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&pps_gen_pins>;
+    compatible = "pps-gen-gpio";
+    pps-gen-gpio = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+    default-state = "off";
+  };
 };
