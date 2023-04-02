@@ -1,0 +1,41 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+* Generate pps signal on P9.16 (GPIO0_94)
+*/
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/board/k3-j721e-bone-pins.h>
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/pinctrl/k3.h>
+
+
+/*
+ * Helper to show loaded overlays under: /proc/device-tree/chosen/overlays/
+ */
+&{/chosen} {
+  overlays {
+  BBAI64-PPS-GEN =  __TIMESTAMP__;
+  };
+};
+
+
+&main_pmx0 {
+  pps_gen_pins: pinmux_pps_gen_pins {
+    pinctrl-single,pins = <
+    P9_16(PIN_OUTPUT_PULLDOWN, 7)  /* J721E_IOPAD(0x17C, PIN_OUTPUT_PULLDOWN, 7) */
+    >;
+  };
+};
+
+&{/} {
+  pps-gen {
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&pps_gen_pins>;
+    compatible = "pps-gen-gpio";
+    pps-gen-gpio = <gpio_P9_16 GPIO_ACTIVE_HIGH>; /* <&main_gpio0 94 0>;*/
+    default-state = "off";
+  };
+};
