@@ -5,7 +5,8 @@ Linux kernel PPS generator using GPIO pins.
 
 In kernel 5.10.162 there is no support for using a GPIO pin as a PPS generator, only a GPIO PPS client is available. This driver is derived from the current parallel port PPS generator and provides a PPS signal through a GPIO pin specified in the device tree. The PPS signal is synchronized to the tv_sec increment of the wall clock.
 
-I have tested the driver with kernel 5.10.162 on a Beaglebone Black (P9.16) and Beaglebone AI64 (P9.16) where the specified pin is used as PPS output. On the Beaglebone Black I have encounters some errors when the pss-gen-gpio module was loaded. For example whole system halted, when I restarted a systemd service (chrony.service). Additionally the pps-gen-gpio driver seems to not always create a pps signal. The behavior is better on the BeagleBone AI64. But some PPS-Signals are lost here aswell.
+I have tested the driver with kernel 5.10.162 on a Beaglebone Black (P9.16) and Beaglebone AI64 (P9.16) where the specified pin is used as PPS output. On the Beaglebone Black I have encounters some errors when the pss-gen-gpio module was loaded. For example whole system halted, when I restarted a systemd service (chrony.service). Whenever I encountered this problems removing the module (rmmod), executing the desired command and then reinstering the module (insmod) worked for me. 
+Additionally the pps-gen-gpio driver seems to not always create a pps signal. The behavior is better on the BeagleBone AI64. But some PPS-Signals are lost here aswell.
 
 Usage
 -----
